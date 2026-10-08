@@ -57,4 +57,32 @@ class LifecycleMonitorActivity : AppCompatActivity() {
         cancelButton.setOnClickListener(buttonClickListener)
         Log.d(Constants.TAG, "onCreate() method was invoked without a previous state")
     }
+
+    public override fun onRestart() {
+        super.onRestart()
+        Log.d(Constants.TAG,"onRestart() method was invoked")
+    }
+    public override fun onStart() {
+        super.onStart()
+        Log.d(Constants.TAG,"onStart() method was invoked")
+    }
+    public override fun onResume() {
+        super.onResume()
+        Log.d(Constants.TAG,"onResume() method was invoked")
+    }
+    public override fun onPause() {
+        super.onPause()
+        Log.d(Constants.TAG,"onPause() method was invoked")
+    }
+    public override fun onStop() {
+        super.onStop()
+        Log.d(Constants.TAG,"onStop() method was invoked")
+    }
+    public override fun onDestroy() {
+        super.onDestroy()
+        Log.d(Constants.TAG,"onDestroy() method was invoked")
+    }
+
+
+
 }

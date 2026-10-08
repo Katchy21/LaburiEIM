@@ -8,6 +8,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.PopupWindow
 import ro.pub.systems.eim.lab02.activitylifecyclemonitor.R
@@ -51,11 +52,31 @@ class LifecycleMonitorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lifecycle_monitor)
+
         val okButton = findViewById(R.id.ok_button) as Button
         okButton.setOnClickListener(buttonClickListener)
         val cancelButton = findViewById(R.id.cancel_button) as Button
         cancelButton.setOnClickListener(buttonClickListener)
-        Log.d(Constants.TAG, "onCreate() method was invoked without a previous state")
+
+        if(savedInstanceState == null)
+        {
+            Log.d(Constants.TAG, "onCreate() method was invoked without a previous state")
+        } else {
+            Log.d(Constants.TAG, "onCreate() method was invoked with a previous state")
+            val usernameEditText = findViewById(R.id.username_edit_text) as EditText
+            val passwordEditText = findViewById(R.id.password_edit_text) as EditText
+            val checkBox = findViewById(R.id.remember_me_checkbox) as CheckBox
+
+            savedInstanceState.getString(Constants.USERNAME_EDIT_TEXT)?.let { username ->
+                usernameEditText.setText(username)
+            }
+            savedInstanceState.getString(Constants.PASSWORD_EDIT_TEXT)?.let { password ->
+                passwordEditText.setText(password)
+            }
+            savedInstanceState.getBoolean(Constants.REMEMBER_ME_CHECKBOX)?.let { checkbox ->
+                checkBox.isChecked = checkbox
+            }
+        }
     }
 
     public override fun onRestart() {
@@ -83,6 +104,47 @@ class LifecycleMonitorActivity : AppCompatActivity() {
         Log.d(Constants.TAG,"onDestroy() method was invoked")
     }
 
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        /* Trebuie sa apelam metoda din clasa de baza întrucât API-ul Android
+        furnizează o implementare implicită pentru salvarea stării unei
+        activități, parcurgând ierarhia de componente grafice (obiecte de tip
+        `View`) care au asociat un identificator (`android:id`), folosit drept
+        cheie în obiectul `Bundle`. Astfel, de regulă, pentru elementele
+        interfeței grafice, nu este necesar să se mențină starea, acest lucru
+        fiind realizat în mod automat, cu respectarea condiției menționate.
+        super.onSaveInstanceState(savedInstanceState); */
 
+        super.onSaveInstanceState(savedInstanceState)
 
+        /* Determian o referinta pentru obiectul de tip EditText din interfata grafica
+           cu ID-ul username_edit_text */
+        val usernameEditText = findViewById(R.id.username_edit_text) as EditText
+        val passwordEditText = findViewById(R.id.password_edit_text) as EditText
+        val checkBox = findViewById(R.id.remember_me_checkbox) as CheckBox
+
+        if(checkBox.isChecked)
+        {
+            savedInstanceState.putString(Constants.USERNAME_EDIT_TEXT, usernameEditText.text.toString())
+            savedInstanceState.putString(Constants.PASSWORD_EDIT_TEXT, passwordEditText.text.toString())
+            savedInstanceState.putBoolean(Constants.REMEMBER_ME_CHECKBOX, checkBox.isChecked)
+        }
+    }
+
+//    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+//        super.onRestoreInstanceState(savedInstanceState)
+//
+//        val usernameEditText = findViewById(R.id.username_edit_text) as EditText
+//        val passwordEditText = findViewById(R.id.password_edit_text) as EditText
+//        val checkBox = findViewById(R.id.remember_me_checkbox) as CheckBox
+//
+//        savedInstanceState.getString(Constants.USERNAME_EDIT_TEXT)?.let { username ->
+//            usernameEditText.setText(username)
+//        }
+//        savedInstanceState.getString(Constants.PASSWORD_EDIT_TEXT)?.let { password ->
+//            passwordEditText.setText(password)
+//        }
+//        savedInstanceState.getBoolean(Constants.REMEMBER_ME_CHECKBOX)?.let { checkbox ->
+//            checkBox.isChecked = checkbox
+//        }
+//    }
 }
